@@ -36,12 +36,19 @@
   .tab.pulse{box-shadow:0 0 0 0 rgba(13,148,136,.55);animation:ring 1.9s ease-out infinite}
   @keyframes ring{0%{box-shadow:0 0 0 0 rgba(13,148,136,.5)}70%{box-shadow:0 0 0 10px rgba(13,148,136,0)}100%{box-shadow:0 0 0 0 rgba(13,148,136,0)}}
   .tab-dot{position:absolute;top:3px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--teal)}
-  /* highlighted roadmap tab so it never gets lost in the corner */
-  .tab.feature{background:linear-gradient(135deg,var(--teal-deep),#159b8d);color:#04231f;font-weight:800;font-size:13.5px;padding:8px 18px;box-shadow:0 3px 16px rgba(44,201,184,.34)}
+  /* roadmap tab — same font as Score Card; attention drawn via colour + bounce */
+  .tab.feature{background:linear-gradient(135deg,var(--teal-deep),#159b8d);color:#04231f;box-shadow:0 3px 16px rgba(44,201,184,.34);animation:tabBounce 1.45s ease-in-out infinite}
   .tab.feature:hover{filter:brightness(1.07)}
   .tab.feature[aria-selected="true"]{background:var(--teal);color:#04231f}
-  .tab.feature .tab-dot{background:#04231f}
-  .tab .tab-arrow{font-weight:800;margin-left:3px;display:inline-block}
+  .tab.feature.settled{animation:none}
+  .tab .tab-arrow{font-weight:700;margin-left:3px;display:inline-block}
+  @keyframes tabBounce{0%,100%{transform:translateY(0)}25%{transform:translateY(-4px)}42%{transform:translateY(0)}58%{transform:translateY(-2px)}74%{transform:translateY(0)}}
+  /* animated "click here" hand cue pointing at the roadmap tab */
+  .click-hint{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:12px;font-weight:700;color:var(--teal-deep);white-space:nowrap;cursor:pointer;user-select:none;animation:handBobX 1.05s ease-in-out infinite}
+  .click-hint .hand{font-size:17px;line-height:1}
+  .click-hint .hand-d{display:none}
+  @keyframes handBobX{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+  @keyframes handBobY{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
   .tabtip{display:none;position:absolute;top:calc(100% + 10px);right:0;width:248px;background:var(--panel);border:1px solid var(--line);color:#e7ecf3;font-size:12px;font-weight:500;line-height:1.45;padding:11px 13px;border-radius:10px;box-shadow:var(--shadow);z-index:60;text-align:left}
   .tab:hover .tabtip,.tab:focus-visible .tabtip{display:block}
 
@@ -68,8 +75,8 @@
   .ch.right .tip{left:auto;right:0}
 
   /* kpi band */
-  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:24px 0 8px}
-  .kpi{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);position:relative}
+  .kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin:24px 0 8px}
+  .kpi{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);position:relative;min-width:0}
   .kpi .accent{position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:3px;background:var(--teal)}
   .kpi.val .accent{background:var(--amber-fill)}
   .kpi.risk .accent{background:var(--rose-fill)}
@@ -100,9 +107,9 @@
   .mtag.amber{background:var(--amber-wash);color:var(--amber)}
 
   /* grid + cards */
-  .grid{display:grid;gap:14px;margin-top:14px}
-  .g2{grid-template-columns:1fr 1fr}
-  .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+  .grid{display:grid;gap:14px;margin-top:14px;grid-template-columns:minmax(0,1fr)}
+  .g2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);min-width:0}
   .card h3{font-size:14.5px;font-weight:700;letter-spacing:-.01em}
   .card .hint{font-size:12px;color:var(--faint);margin:6px 0 16px}
 
@@ -156,8 +163,8 @@
   .dora-legend{display:flex;gap:16px;margin:2px 0 12px;font-size:11.5px;color:var(--muted)}
 
   /* calculator */
-  .calc{display:grid;grid-template-columns:1fr 300px;gap:22px}
-  .controls{display:flex;flex-direction:column;gap:17px}
+  .calc{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px}
+  .controls{display:flex;flex-direction:column;gap:17px;min-width:0}
   .ctrl label{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;margin-bottom:7px;gap:10px}
   .ctrl label .cl{color:var(--muted)}
   .ctrl label .cu{font-size:10.5px;color:var(--faint);font-family:var(--mono)}
@@ -257,12 +264,12 @@
   .sk-pill{font:600 9px var(--sans);fill:#eaf7f4;paint-order:stroke;stroke:#0c0f16;stroke-width:3px;stroke-linejoin:round}
 
   @media (max-width:920px){
-    .kpis{grid-template-columns:repeat(2,1fr)}
-    .g2{grid-template-columns:1fr}
-    .calc{grid-template-columns:1fr}
-    .method-cols{grid-template-columns:1fr}
-    .rm-intro{grid-template-columns:1fr}
-    .phase-head,.lane,.success{grid-template-columns:1fr}
+    .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .g2{grid-template-columns:minmax(0,1fr)}
+    .calc{grid-template-columns:minmax(0,1fr)}
+    .method-cols{grid-template-columns:minmax(0,1fr)}
+    .rm-intro{grid-template-columns:minmax(0,1fr)}
+    .phase-head,.lane,.success{grid-template-columns:minmax(0,1fr)}
     .phase-head .corner,.success .scorner{display:none}
     .tabtip{right:auto;left:0}
   }
@@ -278,6 +285,9 @@
     .tab{flex:1;text-align:center;padding:9px 8px;font-size:12px}
     .tab.feature{font-size:12px;padding:9px 8px}
     .tab-dot{display:none}
+    .click-hint{flex-basis:100%;justify-content:center;order:0;animation-name:handBobY}
+    .click-hint .hand-r{display:none}
+    .click-hint .hand-d{display:inline}
     .tabtip{display:none!important}
     .hero{min-height:300px}
     .hero-copy{padding:22px 20px}
@@ -294,7 +304,7 @@
     footer{padding:18px 0 32px}
   }
   @media (max-width:420px){
-    .kpis{grid-template-columns:1fr}
+    .kpis{grid-template-columns:minmax(0,1fr)}
   }
   /* ---- 3D / depth / motion layer ---- */
   .ambient{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;will-change:transform}
@@ -355,12 +365,12 @@
       <span class="sub">/ engineering productivity intelligence</span>
     </div>
     <div class="spacer"></div>
+    <div class="click-hint" id="click-hint" role="button" tabindex="0" aria-label="Open Ramneek's 90 Day Roadmap"><span class="hand hand-r" aria-hidden="true">&#128073;</span><span class="hand hand-d" aria-hidden="true">&#128071;</span><span class="ch-text">Click here</span></div>
     <div class="tabs" role="tablist" aria-label="Views">
       <button class="tab" role="tab" id="tab-sc" aria-selected="true" aria-controls="view-sc">Score Card
         <span class="tabtip">The live AI ROI dashboard — adoption, token spend, the productivity paradox, and an interactive ROI model you can stress-test.</span>
       </button>
-      <button class="tab feature pulse" role="tab" id="tab-rm" aria-selected="false" aria-controls="view-rm">Ramneek's 90 Day Roadmap <span class="tab-arrow">&rarr;</span>
-        <span class="tab-dot"></span>
+      <button class="tab feature" role="tab" id="tab-rm" aria-selected="false" aria-controls="view-rm">Ramneek's 90 Day Roadmap <span class="tab-arrow">&rarr;</span>
         <span class="tabtip">The operating plan behind the numbers — how this gets built on the ground across every department in the first six months.</span>
       </button>
     </div>
@@ -989,11 +999,13 @@
   var tabs=[{t:'tab-sc',v:'view-sc'},{t:'tab-rm',v:'view-rm'}];
   function go(which){
     tabs.forEach(function(x){var sel=x.t===which;document.getElementById(x.t).setAttribute('aria-selected',sel);document.getElementById(x.v).classList.toggle('active',sel);});
-    if(which==='tab-rm'){var rt=document.getElementById('tab-rm');rt.classList.remove('pulse');var dot=rt.querySelector('.tab-dot');if(dot)dot.remove();}
+    if(which==='tab-rm'){var rt=document.getElementById('tab-rm');rt.classList.remove('pulse');rt.classList.add('settled');var dot=rt.querySelector('.tab-dot');if(dot)dot.remove();var ch=document.getElementById('click-hint');if(ch)ch.style.display='none';}
     window.scrollTo({top:0,behavior:reduce?'auto':'smooth'});
   }
   tabs.forEach(function(o){document.getElementById(o.t).addEventListener('click',function(){go(o.t);});});
   document.getElementById('rm-cta').addEventListener('click',function(){go('tab-rm');});
+  var chEl=document.getElementById('click-hint');
+  if(chEl){chEl.addEventListener('click',function(){go('tab-rm');});chEl.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go('tab-rm');}});}
 })();
 </script>
 </body>
